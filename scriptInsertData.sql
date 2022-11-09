@@ -13,16 +13,20 @@ insert into category values(1,"Men");
 insert into category values(2,"Women");
 
 /*Insert data customer*/
-insert into customer values(1,"1 Vo Van Ngan","giangnam123@gmail.com","????","Vo Giang Nam","01234167812",1);
-insert into customer values(2,"2 Vo Van Ngan","thanhthoai123@gmail.com","????","Tu Thanh Thoai","01234167813",1);
-insert into customer values(3,"3 Vo Van Ngan","tiendi123@gmail.com","????","Huynh Tien Di","01234167814",1);
-insert into customer values(4,"4 Vo Van Ngan","huudat123@gmail.com","????","Nguyen Huu Dat","01234167815",1);
+insert into customer(address,email,image,name,phone,sex,status) values("1 Vo Van Ngan","giangnam123@gmail.com","????","Vo Giang Nam","01234167812",1,1);
+insert into customer(address,email,image,name,phone,sex,status) values("2 Vo Van Ngan","thanhthoai123@gmail.com","????","Tu Thanh Thoai","01234167813",1,1);
+insert into customer(address,email,image,name,phone,sex,status) values("3 Vo Van Ngan","tiendi123@gmail.com","????","Huynh Tien Di","01234167814",1,1);
+insert into customer(address,email,image,name,phone,sex,status) values("4 Vo Van Ngan","huudat123@gmail.com","????","Nguyen Huu Dat","01234167815",1,1);
 
 /*Insert data login*/
-insert into login values("giangnam123","12345678",0,NULL,1);
-insert into login values("thanhthoai123","12345678",0,NULL,2);
-insert into login values("tiendi123","12345678",1,NULL,3);
-insert into login values("huudat123","12345678",0,NULL,4);
+insert into login(username,password,role,session,customer_id)
+values("giangnam123","$2a$12$Yn2KMYCRbcVZZo.KE3xmzukPzZboQm8S3v.81ZRN5m2VI1cTsMLDO",0,NULL,1);
+insert into login(username,password,role,session,customer_id)
+values("thanhthoai123","$2a$12$Yn2KMYCRbcVZZo.KE3xmzukPzZboQm8S3v.81ZRN5m2VI1cTsMLDO",0,NULL,2);
+insert into login(username,password,role,session,customer_id)
+values("tiendi123","$2a$12$Yn2KMYCRbcVZZo.KE3xmzukPzZboQm8S3v.81ZRN5m2VI1cTsMLDO",1,NULL,3);
+insert into login(username,password,role,session,customer_id)
+values("huudat123","$2a$12$Yn2KMYCRbcVZZo.KE3xmzukPzZboQm8S3v.81ZRN5m2VI1cTsMLDO",0,NULL,4);
 
 /*Insert data color*/
 insert into color(color) values("white");

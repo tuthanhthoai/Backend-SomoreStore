@@ -2,6 +2,7 @@ package com.backend.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -27,42 +29,6 @@ public class ProductEntity {
 
 	@Column()
 	private Long money;
-
-	@Column(name = "sold_quantity")
-	private Long sold_quantity;
-
-	@Column()
-	private Double discount;
-
-	@Column()
-	private Long stock;
-
-	@Column()
-	private String description;
-
-	@ManyToOne
-	@JoinColumn(name = "category_id", nullable = false)
-	private CategoryEntity category;
-
-	@ManyToOne
-	@JoinColumn(name = "brand_id", nullable = false)
-	private BrandEntity brand;
-
-	@ManyToMany()
-	@JoinTable(name = "product_order", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "order_id"))
-	private List<OrderEntity> orders = new ArrayList<>();
-
-	@ManyToMany()
-	@JoinTable(name = "product_size", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "size_id"))
-	private List<SizeEntity> sizes = new ArrayList<>();
-
-	@ManyToMany()
-	@JoinTable(name = "product_image", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "image_id"))
-	private List<ImageEntity> images = new ArrayList<>();
-
-	@ManyToMany()
-	@JoinTable(name = "product_color", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "color_id"))
-	private List<ColorEntity> colors = new ArrayList<>();
 
 	public String getName() {
 		return name;
@@ -80,32 +46,12 @@ public class ProductEntity {
 		this.money = money;
 	}
 
-	public long getId() {
-		return id;
-	}
-
-	public Long getQuantity() {
+	public Long getSold_quantity() {
 		return sold_quantity;
 	}
 
-	public void setQuantity(Long quantity) {
-		this.sold_quantity = quantity;
-	}
-
-	public CategoryEntity getCategory() {
-		return category;
-	}
-
-	public void setCategory(CategoryEntity category) {
-		this.category = category;
-	}
-
-	public BrandEntity getBrand() {
-		return brand;
-	}
-
-	public void setBrand(BrandEntity brand) {
-		this.brand = brand;
+	public void setSold_quantity(Long sold_quantity) {
+		this.sold_quantity = sold_quantity;
 	}
 
 	public Double getDiscount() {
@@ -116,22 +62,6 @@ public class ProductEntity {
 		this.discount = discount;
 	}
 
-	public List<OrderEntity> getOrders() {
-		return orders;
-	}
-
-	public void setOrders(List<OrderEntity> orders) {
-		this.orders = orders;
-	}
-
-	public Long getSold_quantity() {
-		return sold_quantity;
-	}
-
-	public void setSold_quantity(Long sold_quantity) {
-		this.sold_quantity = sold_quantity;
-	}
-
 	public Long getStock() {
 		return stock;
 	}
@@ -140,12 +70,28 @@ public class ProductEntity {
 		this.stock = stock;
 	}
 
-	public List<SizeEntity> getSizes() {
-		return sizes;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setSizes(List<SizeEntity> sizes) {
-		this.sizes = sizes;
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public List<ProductOrderEntity> getProductOrders() {
+		return productOrders;
+	}
+
+	public void setProductOrders(List<ProductOrderEntity> productOrders) {
+		this.productOrders = productOrders;
+	}
+
+	public List<ProductSizeEntity> getProductSizes() {
+		return productSizes;
+	}
+
+	public void setProductSizes(List<ProductSizeEntity> productSizes) {
+		this.productSizes = productSizes;
 	}
 
 	public List<ImageEntity> getImages() {
@@ -164,12 +110,58 @@ public class ProductEntity {
 		this.colors = colors;
 	}
 
-	public String getDescription() {
-		return description;
+	public CategoryEntity getCategory() {
+		return category;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setCategory(CategoryEntity category) {
+		this.category = category;
 	}
+
+	public BrandEntity getBrand() {
+		return brand;
+	}
+
+	public void setBrand(BrandEntity brand) {
+		this.brand = brand;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	@Column(name = "sold_quantity")
+	private Long sold_quantity;
+
+	@Column()
+	private Double discount;
+
+	@Column()
+	private Long stock;
+
+	@Column()
+	private String description;
+
+	@OneToMany(mappedBy = "product")
+	private List<ProductOrderEntity> productOrders = new ArrayList<>();
+
+	@OneToMany(mappedBy = "product")
+	private List<ProductSizeEntity> productSizes = new ArrayList<>();
+
+	@ManyToMany()
+	@JoinTable(name = "product_image", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "image_id"))
+	private List<ImageEntity> images = new ArrayList<>();
+
+	@ManyToMany()
+	@JoinTable(name = "product_color", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "color_id"))
+	private List<ColorEntity> colors = new ArrayList<>();
+
+	@ManyToOne
+	@JoinColumn(name = "category_id", nullable = false)
+	private CategoryEntity category;
+
+	@ManyToOne
+	@JoinColumn(name = "brand_id", nullable = false)
+	private BrandEntity brand;
 
 }

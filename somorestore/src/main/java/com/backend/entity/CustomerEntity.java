@@ -22,27 +22,6 @@ public class CustomerEntity {
 	@Column()
 	private String name;
 
-	@Column()
-	private String phone;
-
-	@Column()
-	private String address;
-
-	@Column()
-	private Boolean sex;
-
-	@Column()
-	private String email;
-
-	@Column()
-	private String image;
-
-	@OneToOne(mappedBy = "customer")
-	private LoginEntity login;
-
-	@OneToMany(mappedBy = "customer")
-	private List<OrderEntity> orders;
-
 	public String getName() {
 		return name;
 	}
@@ -91,8 +70,12 @@ public class CustomerEntity {
 		this.image = image;
 	}
 
-	public Long getId() {
-		return id;
+	public Boolean getStatus() {
+		return status;
+	}
+
+	public void setStatus(Boolean status) {
+		this.status = status;
 	}
 
 	public LoginEntity getLogin() {
@@ -110,5 +93,33 @@ public class CustomerEntity {
 	public void setOrders(List<OrderEntity> orders) {
 		this.orders = orders;
 	}
+
+	public Long getId() {
+		return id;
+	}
+
+	@Column()
+	private String phone;
+
+	@Column()
+	private String address;
+
+	@Column()
+	private Boolean sex;
+
+	@Column()
+	private String email;
+
+	@Column()
+	private String image;
+
+	@Column()
+	private Boolean status;
+
+	@OneToOne(mappedBy = "customer")
+	private LoginEntity login;
+
+	@OneToMany(mappedBy = "customer")
+	private List<OrderEntity> orders;
 
 }

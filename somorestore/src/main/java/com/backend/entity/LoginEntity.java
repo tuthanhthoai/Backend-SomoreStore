@@ -25,13 +25,9 @@ public class LoginEntity {
 
 	@Column()
 	private Boolean role;
-	
+
 	@Column()
 	private Date session;
-
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
-	private CustomerEntity customer;
 
 	public String getUsername() {
 		return username;
@@ -57,6 +53,14 @@ public class LoginEntity {
 		this.role = role;
 	}
 
+	public Date getSession() {
+		return session;
+	}
+
+	public void setSession(Date session) {
+		this.session = session;
+	}
+
 	public CustomerEntity getCustomer() {
 		return customer;
 	}
@@ -65,11 +69,8 @@ public class LoginEntity {
 		this.customer = customer;
 	}
 
-	public Date getSession() {
-		return session;
-	}
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
+	private CustomerEntity customer;
 
-	public void setSession(Date session) {
-		this.session = session;
-	}
 }

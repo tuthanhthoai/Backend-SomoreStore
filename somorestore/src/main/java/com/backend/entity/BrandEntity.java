@@ -10,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "brand")
 public class BrandEntity {
@@ -22,9 +21,6 @@ public class BrandEntity {
 	@Column()
 	private String name;
 
-	@OneToMany(mappedBy = "brand")
-	private List<ProductEntity> products;
-
 	public String getName() {
 		return name;
 	}
@@ -33,16 +29,18 @@ public class BrandEntity {
 		this.name = name;
 	}
 
+	public List<ProductEntity> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<ProductEntity> products) {
+		this.products = products;
+	}
+
 	public Long getId() {
 		return id;
 	}
 
-	public List<ProductEntity> getProduct() {
-		return products;
-	}
-
-	public void setProduct(List<ProductEntity> products) {
-		this.products = products;
-	}
-
+	@OneToMany(mappedBy = "brand")
+	private List<ProductEntity> products;
 }

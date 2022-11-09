@@ -32,16 +32,16 @@ public class CategoryEntity {
 		this.name = name;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public List<ProductEntity> getProduct() {
+	public List<ProductEntity> getProducts() {
 		return products;
 	}
 
-	public void setProduct(List<ProductEntity> products) {
+	public void setProducts(List<ProductEntity> products) {
 		this.products = products;
+	}
+
+	public Long getId() {
+		return id;
 	}
 
 }

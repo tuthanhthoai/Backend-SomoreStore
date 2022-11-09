@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -19,12 +19,6 @@ public class SizeEntity {
 	@Column(name = "size_id")
 	private Long id;
 
-	@Column()
-	private Double size;
-
-	@ManyToMany(mappedBy = "sizes")
-	private List<ProductEntity> products = new ArrayList<>();
-
 	public Double getSize() {
 		return size;
 	}
@@ -33,15 +27,22 @@ public class SizeEntity {
 		this.size = size;
 	}
 
-	public List<ProductEntity> getProducts() {
-		return products;
+	public List<ProductSizeEntity> getProductSizes() {
+		return productSizes;
 	}
 
-	public void setProducts(List<ProductEntity> products) {
-		this.products = products;
+	public void setProductSizes(List<ProductSizeEntity> productSizes) {
+		this.productSizes = productSizes;
 	}
 
 	public Long getId() {
 		return id;
 	}
+
+	@Column()
+	private Double size;
+
+	@OneToMany(mappedBy = "size")
+	private List<ProductSizeEntity> productSizes = new ArrayList<>();
+
 }

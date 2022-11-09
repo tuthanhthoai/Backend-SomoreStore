@@ -19,22 +19,12 @@ public class ImageEntity {
 	@Column(name = "image_id")
 	private Long id;
 
-	@Column()
-	private String image;
-
-	@ManyToMany(mappedBy = "images")
-	private List<ProductEntity> products = new ArrayList<>();
-
 	public String getImage() {
 		return image;
 	}
 
 	public void setImage(String image) {
 		this.image = image;
-	}
-
-	public Long getId() {
-		return id;
 	}
 
 	public List<ProductEntity> getProducts() {
@@ -44,4 +34,14 @@ public class ImageEntity {
 	public void setProducts(List<ProductEntity> products) {
 		this.products = products;
 	}
+
+	public Long getId() {
+		return id;
+	}
+
+	@Column()
+	private String image;
+
+	@ManyToMany(mappedBy = "images")
+	private List<ProductEntity> products = new ArrayList<>();
 }
