@@ -144,6 +144,9 @@ public class ProductEntity {
 
 	@OneToMany(mappedBy = "product")
 	private List<ProductOrderEntity> productOrders = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "product")
+	private List<ProductColorEntity> productColors = new ArrayList<>();
 
 	@OneToMany(mappedBy = "product")
 	private List<ProductSizeEntity> productSizes = new ArrayList<>();

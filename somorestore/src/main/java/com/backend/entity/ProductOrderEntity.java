@@ -7,6 +7,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
 
+import com.backend.Key.ProductOrderKey;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -15,7 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Entity
-@Table(name="product_order")
+@Table(name = "product_order")
 public class ProductOrderEntity {
 
 	@EmbeddedId
@@ -25,6 +27,13 @@ public class ProductOrderEntity {
 	@MapsId("product_id")
 	@JoinColumn(name = "product_id")
 	private ProductEntity product;
+
+	@ManyToOne
+	@MapsId("order_id")
+	@JoinColumn(name = "order_id")
+	private OrderEntity order;
+
+	private Long quantity;
 
 	public ProductEntity getProduct() {
 		return product;
@@ -54,10 +63,4 @@ public class ProductOrderEntity {
 		return id;
 	}
 
-	@ManyToOne
-	@MapsId("order_id")
-	@JoinColumn(name = "order_id")
-	private OrderEntity order;
-
-	private Long quantity;
 }

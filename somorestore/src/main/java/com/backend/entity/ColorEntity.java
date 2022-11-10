@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -22,8 +22,8 @@ public class ColorEntity {
 	@Column()
 	private String color;
 
-	@ManyToMany(mappedBy = "colors")
-	private List<ProductEntity> products = new ArrayList<>();
+	@OneToMany(mappedBy = "color")
+	private List<ProductColorEntity> productColors = new ArrayList<>();
 
 	public String getColor() {
 		return color;
@@ -33,15 +33,16 @@ public class ColorEntity {
 		this.color = color;
 	}
 
-	public List<ProductEntity> getProducts() {
-		return products;
-	}
-
-	public void setProducts(List<ProductEntity> products) {
-		this.products = products;
-	}
-
 	public Long getId() {
 		return id;
 	}
+
+	public List<ProductColorEntity> getProductColors() {
+		return productColors;
+	}
+
+	public void setProductColors(List<ProductColorEntity> productColors) {
+		this.productColors = productColors;
+	}
+
 }

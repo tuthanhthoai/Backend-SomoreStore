@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 @Embeddable
-public class ProductSizeKey implements Serializable{
+@EqualsAndHashCode
+public class ProductColorKey implements Serializable {
 	@Column(name = "product_id")
 	private Long product_id;
 
@@ -21,19 +21,10 @@ public class ProductSizeKey implements Serializable{
 		return product_id;
 	}
 
-	public void setProduct_id(Long product_id) {
-		this.product_id = product_id;
+	public Long getColor_id() {
+		return color_id;
 	}
 
-	public Long getSize_id() {
-		return size_id;
-	}
-
-	public void setSize_id(Long size_id) {
-		this.size_id = size_id;
-	}
-
-	@Column(name = "size_id")
-	private Long size_id;
-
+	@Column(name = "color_id")
+	private Long color_id;
 }

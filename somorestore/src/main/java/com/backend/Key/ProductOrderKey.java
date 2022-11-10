@@ -1,4 +1,4 @@
-package com.backend.entity;
+package com.backend.Key;
 
 import java.io.Serializable;
 

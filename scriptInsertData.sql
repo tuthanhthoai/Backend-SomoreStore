@@ -80,34 +80,8 @@ create table test(
     category_id BIGINT
 );
 
--- /*Insert data product*/
--- /*1*/
--- insert into product (description,discount,money,name,sold_quantity,stock,brand_id,category_id)
--- values ("",0,74.99,"ADIDAS MENS RACER TR21 SNEAKER",0,10,1,1);
--- set @product_id=last_insert_id();
--- set @color_id = (select color_id from color where color ='white');
--- insert ignore into image (image)
--- values ("https://deichmann.scene7.com/asset/deichmann/US_01_600855_01?$rr_main$&defaultImage=default_obs");
--- set @image_id=last_insert_id();
--- insert ignore into product_color (product_id,color_id)
--- values (@product_id,@color_id);
--- insert ignore into product_image (product_id,image_id)
--- values (@product_id,@image_id);
-
--- /*2*/
--- insert into product (description,discount,money,name,sold_quantity,stock,brand_id,category_id)
--- values ("",0,74.99,"ADIDAS MENS RACER TR21 SNEAKER",0,10,1,1);
--- set @product_id=last_insert_id();
--- set @color_id = (select color_id from color where color ='black');
--- insert ignore into image (image)
--- values ("https://deichmann.scene7.com/asset/deichmann/US_01_600625_01?$rr_main$&defaultImage=default_obs");
--- set @image_id=last_insert_id();
--- insert ignore into product_color (product_id,color_id)
--- values (@product_id,@color_id);
--- insert ignore into product_image (product_id,image_id)
--- values (@product_id,@image_id);
-
 /*Insert data product*/
+-- DROP PROCEDURE IF EXISTS insert_data_to_product;
 delimiter #
 create procedure insert_data_to_product()
 begin
@@ -121,72 +95,134 @@ declare categoryId_test bigint;
 declare cur cursor for select color,image,money,name,brand_id,category_id from test;
 DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 open cur;
-  
-  read_loop: LOOP
-	fetch cur into color_test,image_test,money_test,name_test,brandId_test,categoryId_test;
-	start transaction;
-	IF done THEN
-      LEAVE read_loop;
-	END IF;
-    insert into product (description,discount,money,name,sold_quantity,stock,brand_id,category_id)
-	values ("",0,money_test,name_test,0,10,brandId_test,categoryId_test);
-	set @product_id=last_insert_id();
-	set @color_id = (select color_id from color where color = color_test);
-	insert ignore into image (image)
-	values (image_test);
-	set @image_id=last_insert_id();
-	insert ignore into product_color (product_id,color_id)
-	values (@product_id,@color_id);
-	insert ignore into product_image (product_id,image_id)
-	values (@product_id,@image_id);
-    commit;
-  END LOOP;
-  CLOSE cur;
+fetch cur into color_test,image_test,money_test,name_test,brandId_test,categoryId_test;
+	read_loop: LOOP
+		start transaction;
+			IF done THEN
+			  LEAVE read_loop;
+			END IF;
+            set @product_name = name_test; -- Lấy name của product
+			set @count_name = (select count(name) from test where name = @product_name); -- Lấy ra số lượng tên trùng
+			insert ignore into product (description,discount,money,name,sold_quantity,stock,brand_id,category_id)
+			values ("",0,money_test,name_test,0,12,brandId_test,categoryId_test);
+			set @product_id=last_insert_id();
+			set @count_quantity = 12 / @count_name;
+			while @count_name >= 1 DO 
+				set @color_id = (select color_id from color where color = color_test);
+				insert ignore into image (image)
+				values (image_test);
+				set @image_id=last_insert_id();
+				insert ignore into product_color (product_id,color_id,stock)
+				values (@product_id,@color_id,@count_quantity);
+				insert ignore into product_image (product_id,image_id)
+				values (@product_id,@image_id);
+				fetch cur into color_test,image_test,money_test,name_test,brandId_test,categoryId_test;
+				set @count_name = @count_name - 1;
+			end while;
+			insert ignore into product_size (product_id,size_id,quantity)
+			values (@product_id,1,6);
+			insert ignore into product_size (product_id,size_id,quantity)
+			values (@product_id,2,6);
+		commit;
+	END LOOP;
+CLOSE cur;
 end #
 delimiter ;
 
 call insert_data_to_product();
 
 /*Insert Data order_shoes*/
-insert into order_shoes(discount,order_date,payment_status,quantity,total_price,customer_id)
-values(10,'2022-11-08',1,5,360,1);
+insert into order_shoes(discount,order_date,payment_status,total_price,customer_id)
+values(10,'2022-11-08',1,423,1);
 set @order_id=last_insert_id();
-insert into product_order(product_id,order_id)
-values (1,@order_id);
-insert into product_order(product_id,order_id)
-values (2,@order_id);
-insert into product_order(product_id,order_id)
-values (3,@order_id);
-insert into product_order(product_id,order_id)
-values (4,@order_id);
-insert into product_order(product_id,order_id)
-values (5,@order_id);
+insert into product_order(product_id,order_id,quantity)
+values (1,@order_id,2);
+set @product_id = 1;
+set @quantity = 2;
+set @temp_Sold = (select sold_quantity from product where product_id = @product_id );
+set @temp_Stock = (select stock from product where product_id = @product_id );
+update product
+set sold_quantity = @temp_Sold + @quantity, stock = @temp_Stock - @quantity
+where product_id = @product_id;
+insert into product_order(product_id,order_id,quantity)
+values (2,@order_id,2);
+set @product_id = 2;
+set @quantity = 2;
+set @temp_Sold = (select sold_quantity from product where product_id = @product_id );
+set @temp_Stock = (select stock from product where product_id = @product_id );
+update product
+set sold_quantity = @temp_Sold + @quantity, stock = @temp_Stock - @quantity
+where product_id = @product_id;
+insert into product_order(product_id,order_id,quantity)
+values (5,@order_id,2);
+set @product_id = 5;
+set @quantity = 2;
+set @temp_Sold = (select sold_quantity from product where product_id = @product_id );
+set @temp_Stock = (select stock from product where product_id = @product_id );
+update product
+set sold_quantity = @temp_Sold + @quantity, stock = @temp_Stock - @quantity
+where product_id = @product_id;
 
 /*Insert Data order_shoes*/
-insert into order_shoes(discount,order_date,payment_status,quantity,total_price,customer_id)
-values(0,'2022-11-08',0,4,330,2);
+insert into order_shoes(discount,order_date,payment_status,total_price,customer_id)
+values(0,'2022-11-08',0,725,2);
 set @order_id=last_insert_id();
-insert into product_order(product_id,order_id)
-values (4,@order_id);
-insert into product_order(product_id,order_id)
-values (7,@order_id);
-insert into product_order(product_id,order_id)
-values (9,@order_id);
-insert into product_order(product_id,order_id)
-values (10,@order_id);
+insert into product_order(product_id,order_id,quantity)
+values (10,@order_id,3);
+set @product_id = 10;
+set @quantity = 3;
+set @temp_Sold = (select sold_quantity from product where product_id = @product_id );
+set @temp_Stock = (select stock from product where product_id = @product_id );
+update product
+set sold_quantity = @temp_Sold + @quantity, stock = @temp_Stock - @quantity
+where product_id = @product_id;
+insert into product_order(product_id,order_id,quantity)
+values (11,@order_id,2);
+set @product_id = 11;
+set @quantity = 2;
+set @temp_Sold = (select sold_quantity from product where product_id = @product_id );
+set @temp_Stock = (select stock from product where product_id = @product_id );
+update product
+set sold_quantity = @temp_Sold + @quantity, stock = @temp_Stock - @quantity
+where product_id = @product_id;
+insert into product_order(product_id,order_id,quantity)
+values (12,@order_id,4);
+set @product_id = 12;
+set @quantity = 4;
+set @temp_Sold = (select sold_quantity from product where product_id = @product_id );
+set @temp_Stock = (select stock from product where product_id = @product_id );
+update product
+set sold_quantity = @temp_Sold + @quantity, stock = @temp_Stock - @quantity
+where product_id = @product_id;
 
-insert into order_shoes(discount,order_date,payment_status,quantity,total_price,customer_id)
-values(10,'2022-11-08',1,6,405,3);
+/*Insert Data order_shoes*/
+insert into order_shoes(discount,order_date,payment_status,total_price,customer_id)
+values(10,'2022-11-08',1,387,3);
 set @order_id=last_insert_id();
-insert into product_order(product_id,order_id)
-values (15,@order_id);
-insert into product_order(product_id,order_id)
-values (17,@order_id);
-insert into product_order(product_id,order_id)
-values (50,@order_id);
-insert into product_order(product_id,order_id)
-values (60,@order_id);
-insert into product_order(product_id,order_id)
-values (100,@order_id);
-insert into product_order(product_id,order_id)
-values (119,@order_id);
+insert into product_order(product_id,order_id,quantity)
+values (24,@order_id,2);
+set @product_id = 24;
+set @quantity = 2;
+set @temp_Sold = (select sold_quantity from product where product_id = @product_id );
+set @temp_Stock = (select stock from product where product_id = @product_id );
+update product
+set sold_quantity = @temp_Sold + @quantity, stock = @temp_Stock - @quantity
+where product_id = @product_id;
+insert into product_order(product_id,order_id,quantity)
+values (33,@order_id,2);
+set @product_id = 33;
+set @quantity = 2;
+set @temp_Sold = (select sold_quantity from product where product_id = @product_id );
+set @temp_Stock = (select stock from product where product_id = @product_id );
+update product
+set sold_quantity = @temp_Sold + @quantity, stock = @temp_Stock - @quantity
+where product_id = @product_id;
+insert into product_order(product_id,order_id,quantity)
+values (49,@order_id,2);
+set @product_id = 49;
+set @quantity = 2;
+set @temp_Sold = (select sold_quantity from product where product_id = @product_id );
+set @temp_Stock = (select stock from product where product_id = @product_id );
+update product
+set sold_quantity = @temp_Sold + @quantity, stock = @temp_Stock - @quantity
+where product_id = @product_id;

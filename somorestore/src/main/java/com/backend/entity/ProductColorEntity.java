@@ -7,7 +7,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
 
-import com.backend.Key.ProductSizeKey;
+import com.backend.Key.ProductColorKey;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -17,10 +17,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode
 @Entity
-@Table(name="product_size")
-public class ProductSizeEntity {
+@Table(name = "product_color")
+public class ProductColorEntity {
 	@EmbeddedId
-	ProductSizeKey id;
+	ProductColorKey id;
 
 	@ManyToOne
 	@MapsId("product_id")
@@ -28,9 +28,11 @@ public class ProductSizeEntity {
 	private ProductEntity product;
 
 	@ManyToOne
-	@MapsId("size_id")
-	@JoinColumn(name = "size_id")
-	private SizeEntity size;
+	@MapsId("color_id")
+	@JoinColumn(name = "color_id")
+	private ColorEntity color;
+
+	private Long stock;
 
 	public ProductEntity getProduct() {
 		return product;
@@ -40,26 +42,24 @@ public class ProductSizeEntity {
 		this.product = product;
 	}
 
-	public SizeEntity getSize() {
-		return size;
+	public ColorEntity getColor() {
+		return color;
 	}
 
-	public void setSize(SizeEntity size) {
-		this.size = size;
+	public void setColor(ColorEntity color) {
+		this.color = color;
 	}
 
-	public Long getQuantity() {
-		return quantity;
+	public Long getStock() {
+		return stock;
 	}
 
-	public void setQuantity(Long quantity) {
-		this.quantity = quantity;
+	public void setStock(Long stock) {
+		this.stock = stock;
 	}
 
-	public ProductSizeKey getId() {
+	public ProductColorKey getId() {
 		return id;
 	}
-
-	private Long quantity;
 
 }
