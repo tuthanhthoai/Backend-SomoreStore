@@ -5,6 +5,8 @@ import java.sql.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
@@ -30,6 +32,18 @@ public class LoginEntity {
 
 	@Column()
 	private Date session;
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "auth_provider")
+	private Provider provider;
+
+	public Provider getProvider() {
+		return provider;
+	}
+
+	public void setProvider(Provider provider) {
+		this.provider = provider;
+	}
 
 	public String getUsername() {
 		return username;
